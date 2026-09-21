@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>RoadGuard AI — Real-time pothole detection for Ghana's roads</title>
+<meta name="description" content="RoadGuard AI detects potholes from road images in real time using YOLOv8, geotags them, and turns the results into a live heatmap and severity reports for road authorities." />
+<link rel="canonical" href="/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="RoadGuard AI — Real-time pothole detection for Ghana's roads" />
+<meta property="og:description" content="AI-powered pothole detection with a live heatmap, dashboard, and exportable reports for road authorities." />
+<meta property="og:image" content="/assets/img/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="/" class="brand">
+      <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+      RoadGuard AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="/index.html" class="is-active">Home</a></li>
+      <li><a href="/live-demo.html">Live Demo</a></li>
+      <li><a href="/heatmap.html">Heatmap</a></li>
+      <li><a href="/dashboard.html">Dashboard</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/live-demo.html" class="btn btn-ghost btn-small desktop-only">Try the demo</a>
+      <button type="button" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a href="/index.html">Home</a>
+  <a href="/live-demo.html">Live Demo</a>
+  <a href="/heatmap.html">Heatmap</a>
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/about.html">About</a>
+  <a href="/live-demo.html" class="btn btn-primary btn-block">Try the demo</a>
+</div>
+
+<main>
+
+  <section class="hero">
+    <div class="glow-field" aria-hidden="true"><div class="orb"></div></div>
+    <div class="container" style="position: relative; z-index: 1;">
+      <span class="eyebrow"><span class="dot"></span> Live on Ghana's road network</span>
+      <h1>Every pothole,<br /><span class="gradient-text">spotted before it spreads.</span></h1>
+      <p class="lede">
+        RoadGuard AI runs a YOLOv8 vision model over road imagery from
+        ESP32-CAM units and manual reports, geotags every confirmed
+        pothole, and streams the results into a live heatmap and
+        severity dashboard — built for Ghana's Highway Authority.
+      </p>
+      <div class="hero-actions">
+        <a href="/live-demo.html" class="btn btn-primary">Try live detection</a>
+        <a href="/heatmap.html" class="btn btn-ghost">View the heatmap</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Why it exists</span>
+        <h2>Road damage is reported too late,<br />and fixed even later.</h2>
+        <p>
+          Ghana's road network grows faster than anyone can inspect it
+          on foot. RoadGuard AI turns any dashboard camera, phone, or
+          low-cost ESP32-CAM module into a sensor — so potholes get
+          logged with GPS precision the moment they're captured.
+        </p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.4L17.7 20 12 16.8 6.3 20l1.2-6.6L3 8.5l6-1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Trained detection model</h3>
+          <p>A YOLOv8 model fine-tuned specifically on pothole imagery — not a generic object detector — scores every frame for confirmed potholes.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4"/></svg>
+          </div>
+          <h3>Geotagged automatically</h3>
+          <p>Every confirmed detection is saved with its GPS coordinates, so it can be plotted, clustered by region, and prioritized by severity.</p>
+        </div>
+        <div class="card">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 3v18h18" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 15l4-5 3 3 5-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Report-ready output</h3>
+          <p>Detections roll up into region-level severity reports and export to CSV or GeoJSON for GHA teams, QGIS, or ArcGIS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>From a bumpy road to a mapped hazard, in four steps.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="num">01</span>
+          <h4>Capture</h4>
+          <p>An ESP32-CAM unit or manual upload sends a road image with GPS coordinates from an onboard NEO-6M module.</p>
+        </div>
+        <div class="step">
+          <span class="num">02</span>
+          <h4>Detect</h4>
+          <p>The image is scored by a YOLOv8 model fine-tuned on real pothole imagery, returning labels, confidence, and bounding boxes.</p>
+        </div>
+        <div class="step">
+          <span class="num">03</span>
+          <h4>Store</h4>
+          <p>Confirmed potholes (≥ 0.4 confidence) are persisted to a geospatial Supabase table with device and timestamp metadata.</p>
+        </div>
+        <div class="step">
+          <span class="num">04</span>
+          <h4>Act</h4>
+          <p>The heatmap, dashboard, and CSV/GeoJSON exports turn raw detections into a prioritized repair list for road authorities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="flex-between mt-8" style="margin-bottom: 28px;">
+        <div>
+          <span class="eyebrow">Live network</span>
+          <h2 style="font-size: clamp(24px,3.4vw,34px); font-weight:700; letter-spacing:-0.01em;">Pulled straight from the API — right now.</h2>
+        </div>
+        <a href="/dashboard.html" class="btn btn-ghost btn-small">Full dashboard</a>
+      </div>
+      <div class="grid grid-4" id="home-stats">
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Total detections</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Avg. confidence</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Active devices</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Data mode</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center" style="margin-bottom:32px;">
+        <span class="eyebrow">Under the hood</span>
+        <h2>One small stack, doing a lot of work.</h2>
+      </div>
+      <div class="pill-row" style="justify-content:center;">
+        <span class="tech-pill">YOLOv8</span>
+        <span class="tech-pill">FastAPI</span>
+        <span class="tech-pill">Supabase (PostGIS)</span>
+        <span class="tech-pill">ESP32-CAM</span>
+        <span class="tech-pill">NEO-6M GPS</span>
+        <span class="tech-pill">Leaflet</span>
+        <span class="tech-pill">Railway</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container text-center">
+      <h2 style="font-size: clamp(28px,4.2vw,46px); font-weight:700; letter-spacing:-0.02em; max-width: 20ch; margin-inline:auto;">
+        See a road. <span class="gradient-text">See it mapped.</span>
+      </h2>
+      <p class="muted mt-16" style="max-width:46ch; margin-inline:auto; font-size:17px;">
+        Upload a photo and coordinates, and watch RoadGuard AI score it in real time.
+      </p>
+      <div class="hero-actions" style="justify-content:center;">
+        <a href="/live-demo.html" class="btn btn-primary">Try live detection</a>
+        <a href="/about.html" class="btn btn-ghost">Read the technical overview</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+          RoadGuard AI
+        </a>
+        <p>AI-powered pothole detection and reporting, built as a final-year engineering project for Ghana's road network.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="/live-demo.html">Live Demo</a></li>
+          <li><a href="/heatmap.html">Heatmap</a></li>
+          <li><a href="/dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Project</h5>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION" target="_blank" rel="noopener">Backend source</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/dummy-fyp-frontend" target="_blank" rel="noopener">Frontend source</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>API</h5>
+        <ul>
+          <li><a href="https://web-production-0431d.up.railway.app/docs" target="_blank" rel="noopener">API reference</a></li>
+          <li><a href="https://web-production-0431d.up.railway.app/health" target="_blank" rel="noopener">Health status</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-year></span> RoadGuard AI · FYP-26 Pothole Detection</span>
+      <span class="status-pill"><span class="status-dot" data-status-dot></span> <span data-status-text>Checking API status…</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script>
+  RoadGuardApi.stats()
+    .then((s) => {
+      const wrap = document.getElementById("home-stats");
+      wrap.innerHTML = `
+        <div class="stat-tile"><div class="value">${s.total_detections.toLocaleString()}</div><div class="label">Total detections</div></div>
+        <div class="stat-tile"><div class="value">${Math.round(s.avg_confidence * 100)}%</div><div class="label">Avg. confidence</div></div>
+        <div class="stat-tile"><div class="value">${s.devices_active}</div><div class="label">Active devices</div></div>
+        <div class="stat-tile"><div class="value">${s.mock_mode ? "Mock" : "Live"}</div><div class="label">Data mode</div></div>
+      `;
+    })
+    .catch(() => {
+      const wrap = document.getElementById("home-stats");
+      wrap.innerHTML = `<div class="alert error" style="grid-column: 1 / -1;">Couldn't load live stats right now. <a href="/dashboard.html" style="text-decoration:underline;">Open the dashboard</a> to retry.</div>`;
+    });
+</script>
+</body>
+</html>

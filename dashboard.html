@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Dashboard — RoadGuard AI</title>
+<meta name="description" content="Live detection statistics, region-level severity reports, and CSV/GeoJSON exports from the RoadGuard AI pothole detection backend." />
+<link rel="canonical" href="/dashboard.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Dashboard — RoadGuard AI" />
+<meta property="og:description" content="Live detection statistics and region severity reports." />
+<meta property="og:image" content="/assets/img/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="/" class="brand">
+      <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+      RoadGuard AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/live-demo.html">Live Demo</a></li>
+      <li><a href="/heatmap.html">Heatmap</a></li>
+      <li><a href="/dashboard.html" class="is-active">Dashboard</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/live-demo.html" class="btn btn-ghost btn-small desktop-only">Try the demo</a>
+      <button type="button" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a href="/index.html">Home</a>
+  <a href="/live-demo.html">Live Demo</a>
+  <a href="/heatmap.html">Heatmap</a>
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/about.html">About</a>
+  <a href="/live-demo.html" class="btn btn-primary btn-block">Try the demo</a>
+</div>
+
+<main>
+  <section class="hero" style="padding-bottom: 20px;">
+    <div class="glow-field" aria-hidden="true"><div class="orb"></div></div>
+    <div class="container" style="position:relative; z-index:1;">
+      <span class="eyebrow"><span class="dot"></span> GET /api/v1/stats · /api/v1/report</span>
+      <h1 style="font-size: clamp(32px, 5vw, 58px); max-width: 24ch;">The state of the road network, <span class="gradient-text">at a glance.</span></h1>
+      <p class="lede">Summary statistics and region-level severity breakdowns, ready to hand to Ghana's Highway Authority.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 10px;">
+    <div class="container">
+
+      <div class="grid grid-4" id="stats-grid">
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Total detections</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Avg. confidence</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Active devices</div></div>
+        <div class="stat-tile"><div class="value skeleton" style="height:36px;width:70%"></div><div class="label">Data mode</div></div>
+      </div>
+
+      <div class="grid grid-2 mt-32" style="align-items:stretch;">
+        <div class="card">
+          <h3>Detections by region</h3>
+          <p class="mt-8">Top regions by total confirmed detections.</p>
+          <div style="position:relative; height:280px; margin-top:16px;">
+            <canvas id="region-chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Severity breakdown</h3>
+          <p class="mt-8">High ≥ 75% confidence, medium ≥ 50%, low below that.</p>
+          <div style="position:relative; height:280px; margin-top:16px;">
+            <canvas id="severity-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-32">
+        <div class="flex-between">
+          <h3>Region report</h3>
+          <span class="small muted" id="report-generated"></span>
+        </div>
+        <div class="table-wrap mt-16">
+          <table>
+            <thead>
+              <tr><th>Region</th><th>Total</th><th>Avg. confidence</th><th>Severity</th></tr>
+            </thead>
+            <tbody id="report-body">
+              <tr><td colspan="4" class="muted">Loading report…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">For GHA teams</span>
+        <h2>Export &amp; manage detections</h2>
+        <p>These calls hit protected endpoints — enter your API key once and it's reused for both the export and the delete tool below.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Export detections</h3>
+          <p class="mt-8">Download all saved detections as CSV for spreadsheets, or GeoJSON to drag straight into QGIS/ArcGIS.</p>
+
+          <div class="field mt-24">
+            <label for="export-apikey">API key</label>
+            <input class="input" type="password" id="export-apikey" placeholder="X-API-Key" autocomplete="new-password" />
+          </div>
+          <div class="input-row">
+            <div class="field">
+              <label for="export-min-conf">Min. confidence</label>
+              <input class="input" type="number" id="export-min-conf" min="0" max="1" step="0.05" value="0" />
+            </div>
+            <div class="field">
+              <label for="export-limit">Row limit</label>
+              <input class="input" type="number" id="export-limit" min="1" max="20000" value="5000" />
+            </div>
+          </div>
+          <div id="export-alerts"></div>
+          <div class="hero-actions" style="margin-top: 6px;">
+            <button type="button" class="btn btn-primary" id="export-csv">Download CSV</button>
+            <button type="button" class="btn btn-ghost" id="export-geojson">Download GeoJSON</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Remove a false positive</h3>
+          <p class="mt-8">Delete a single detection by ID — useful when the model flags something that isn't actually a pothole.</p>
+          <div class="field mt-24">
+            <label for="delete-id">Detection ID</label>
+            <input class="input" type="text" id="delete-id" placeholder="e.g. 6f1c2e3a-..." />
+          </div>
+          <div id="delete-alerts"></div>
+          <button type="button" class="btn btn-ghost" id="delete-btn" style="border-color: rgba(255,95,109,0.4); color:#ffb3ba;">Delete detection</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+          RoadGuard AI
+        </a>
+        <p>AI-powered pothole detection and reporting, built as a final-year engineering project for Ghana's road network.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="/live-demo.html">Live Demo</a></li>
+          <li><a href="/heatmap.html">Heatmap</a></li>
+          <li><a href="/dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Project</h5>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION" target="_blank" rel="noopener">Backend source</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/dummy-fyp-frontend" target="_blank" rel="noopener">Frontend source</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>API</h5>
+        <ul>
+          <li><a href="https://web-production-0431d.up.railway.app/docs" target="_blank" rel="noopener">API reference</a></li>
+          <li><a href="https://web-production-0431d.up.railway.app/health" target="_blank" rel="noopener">Health status</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-year></span> RoadGuard AI · FYP-26 Pothole Detection</span>
+      <span class="status-pill"><span class="status-dot" data-status-dot></span> <span data-status-text>Checking API status…</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/dashboard.js"></script>
+</body>
+</html>

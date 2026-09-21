@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Live Demo — RoadGuard AI</title>
+<meta name="description" content="Upload a road photo and GPS coordinates to run RoadGuard AI's YOLOv8 pothole detector live and see bounding boxes, confidence scores, and severity." />
+<link rel="canonical" href="/live-demo.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Live Demo — RoadGuard AI" />
+<meta property="og:description" content="Run live pothole detection on your own road photo." />
+<meta property="og:image" content="/assets/img/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="/" class="brand">
+      <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+      RoadGuard AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/live-demo.html" class="is-active">Live Demo</a></li>
+      <li><a href="/heatmap.html">Heatmap</a></li>
+      <li><a href="/dashboard.html">Dashboard</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/dashboard.html" class="btn btn-ghost btn-small desktop-only">Dashboard</a>
+      <button type="button" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a href="/index.html">Home</a>
+  <a href="/live-demo.html">Live Demo</a>
+  <a href="/heatmap.html">Heatmap</a>
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/about.html">About</a>
+  <a href="/dashboard.html" class="btn btn-primary btn-block">Dashboard</a>
+</div>
+
+<main>
+  <section class="hero" style="padding-bottom: 20px;">
+    <div class="glow-field" aria-hidden="true"><div class="orb"></div></div>
+    <div class="container" style="position:relative; z-index:1;">
+      <span class="eyebrow"><span class="dot"></span> Runs the real /api/v1/detect endpoint</span>
+      <h1 style="font-size: clamp(32px, 5vw, 58px); max-width: 22ch;">Try <span class="gradient-text">live detection</span> on your own photo.</h1>
+      <p class="lede">Upload a road image, set coordinates within Ghana, and RoadGuard AI's YOLOv8 model will score it in real time — the same call an ESP32-CAM unit makes in the field.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 10px;">
+    <div class="container">
+      <div class="grid grid-2" style="align-items:flex-start;">
+
+        <form class="card" id="detect-form" novalidate>
+          <h3 style="margin-bottom: 18px;">Run a detection</h3>
+
+          <div id="form-alerts"></div>
+
+          <div class="field">
+            <label for="image-input">Road photo</label>
+            <div class="dropzone" id="dropzone">
+              <div class="dz-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5l5 5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <p style="font-weight:600; font-size:15px;">Drop an image, or click to browse</p>
+              <p class="small muted mt-8">JPEG or PNG, up to 10MB</p>
+              <input type="file" id="image-input" accept="image/jpeg,image/png,image/jpg" />
+            </div>
+            <div id="preview-container"></div>
+          </div>
+
+          <div class="input-row">
+            <div class="field">
+              <label for="lat-input">Latitude</label>
+              <input class="input" type="number" id="lat-input" step="0.000001" placeholder="e.g. 5.614818" required />
+            </div>
+            <div class="field">
+              <label for="lng-input">Longitude</label>
+              <input class="input" type="number" id="lng-input" step="0.000001" placeholder="e.g. -0.205742" required />
+            </div>
+          </div>
+          <button type="button" class="btn btn-ghost btn-small" id="use-location">Use my current location</button>
+          <p class="hint mt-8">Coordinates must fall within Ghana's bounding box — the API rejects anything outside it.</p>
+
+          <div class="field mt-24">
+            <label for="device-input">Device ID <span class="muted">(optional)</span></label>
+            <input class="input" type="text" id="device-input" placeholder="manual" />
+          </div>
+
+          <div class="field">
+            <label for="apikey-input">API key</label>
+            <input class="input" type="password" id="apikey-input" placeholder="X-API-Key" autocomplete="new-password" />
+            <div class="checkbox-row mt-8">
+              <input type="checkbox" id="remember-key" />
+              <label for="remember-key" style="margin:0; font-weight:400; color:var(--text-dim);">Remember on this device</label>
+            </div>
+            <p class="hint">/api/v1/detect is protected. Ask your project admin for a key — nothing is sent anywhere except the RoadGuard API, and "remember" only stores it in this browser.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block mt-16" id="submit-btn">
+            Run detection
+          </button>
+        </form>
+
+        <div class="card" id="results-card">
+          <h3 style="margin-bottom: 18px;">Result</h3>
+          <div id="results-empty" class="muted small">
+            Run a detection to see bounding boxes, confidence scores, and whether a pothole was confirmed.
+          </div>
+          <div id="results-body" class="hidden"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+          RoadGuard AI
+        </a>
+        <p>AI-powered pothole detection and reporting, built as a final-year engineering project for Ghana's road network.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="/live-demo.html">Live Demo</a></li>
+          <li><a href="/heatmap.html">Heatmap</a></li>
+          <li><a href="/dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Project</h5>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION" target="_blank" rel="noopener">Backend source</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/dummy-fyp-frontend" target="_blank" rel="noopener">Frontend source</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>API</h5>
+        <ul>
+          <li><a href="https://web-production-0431d.up.railway.app/docs" target="_blank" rel="noopener">API reference</a></li>
+          <li><a href="https://web-production-0431d.up.railway.app/health" target="_blank" rel="noopener">Health status</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-year></span> RoadGuard AI · FYP-26 Pothole Detection</span>
+      <span class="status-pill"><span class="status-dot" data-status-dot></span> <span data-status-text>Checking API status…</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/live-demo.js"></script>
+</body>
+</html>

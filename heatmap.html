@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Pothole Heatmap — RoadGuard AI</title>
+<meta name="description" content="Live map of confirmed pothole detections across Ghana, weighted by confidence, sourced from RoadGuard AI's public /api/v1/heatmap endpoint." />
+<link rel="canonical" href="/heatmap.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Pothole Heatmap — RoadGuard AI" />
+<meta property="og:description" content="Live map of confirmed pothole detections across Ghana." />
+<meta property="og:image" content="/assets/img/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="/assets/css/style.css" />
+<style>
+  #map {
+    width: 100%;
+    height: min(70vh, 640px);
+    min-height: 360px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .leaflet-control-attribution { font-size: 10px; }
+  .map-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .map-toolbar .field { margin-bottom: 0; min-width: 200px; flex: 1; }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
+  .legend-swatch { width: 60px; height: 10px; border-radius: 6px; background: linear-gradient(90deg, #2c7fff, #35d68a, #ffb648, #ff5f6d); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav-row">
+    <a href="/" class="brand">
+      <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+      RoadGuard AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/live-demo.html">Live Demo</a></li>
+      <li><a href="/heatmap.html" class="is-active">Heatmap</a></li>
+      <li><a href="/dashboard.html">Dashboard</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/live-demo.html" class="btn btn-ghost btn-small desktop-only">Try the demo</a>
+      <button type="button" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a href="/index.html">Home</a>
+  <a href="/live-demo.html">Live Demo</a>
+  <a href="/heatmap.html">Heatmap</a>
+  <a href="/dashboard.html">Dashboard</a>
+  <a href="/about.html">About</a>
+  <a href="/live-demo.html" class="btn btn-primary btn-block">Try the demo</a>
+</div>
+
+<main>
+  <section class="hero" style="padding-bottom: 20px;">
+    <div class="glow-field" aria-hidden="true"><div class="orb"></div></div>
+    <div class="container" style="position:relative; z-index:1;">
+      <span class="eyebrow"><span class="dot"></span> Public data · GET /api/v1/heatmap</span>
+      <h1 style="font-size: clamp(32px, 5vw, 58px); max-width: 22ch;">Every confirmed pothole, <span class="gradient-text">on the map.</span></h1>
+      <p class="lede">Weighted by detection confidence and refreshed on demand — this is the same feed a road authority dashboard would consume.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 10px;">
+    <div class="container">
+
+      <div class="card">
+        <div class="map-toolbar">
+          <div class="field">
+            <label for="min-conf">Minimum confidence: <span id="min-conf-val">0.40</span></label>
+            <input type="range" id="min-conf" min="0" max="1" step="0.05" value="0.4" style="width:100%;" />
+          </div>
+          <div class="field">
+            <label for="point-limit">Max points</label>
+            <select class="select" id="point-limit">
+              <option value="200">200</option>
+              <option value="500" selected>500</option>
+              <option value="1000">1000</option>
+              <option value="2000">2000</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-ghost btn-small" id="refresh-map" style="align-self:flex-end;">Refresh</button>
+        </div>
+
+        <div id="map-alerts"></div>
+        <div id="map"></div>
+
+        <div class="flex-between mt-16">
+          <div class="legend-row">
+            <span>Low intensity</span>
+            <span class="legend-swatch"></span>
+            <span>High intensity</span>
+          </div>
+          <span class="small muted" id="point-count">Loading points…</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <img src="/assets/img/favicon-32.png" width="26" height="26" alt="" class="brand-mark" />
+          RoadGuard AI
+        </a>
+        <p>AI-powered pothole detection and reporting, built as a final-year engineering project for Ghana's road network.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <ul>
+          <li><a href="/live-demo.html">Live Demo</a></li>
+          <li><a href="/heatmap.html">Heatmap</a></li>
+          <li><a href="/dashboard.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Project</h5>
+        <ul>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION" target="_blank" rel="noopener">Backend source</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/dummy-fyp-frontend" target="_blank" rel="noopener">Frontend source</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>API</h5>
+        <ul>
+          <li><a href="https://web-production-0431d.up.railway.app/docs" target="_blank" rel="noopener">API reference</a></li>
+          <li><a href="https://web-production-0431d.up.railway.app/health" target="_blank" rel="noopener">Health status</a></li>
+          <li><a href="https://github.com/Kelly-Buabeng/FYP-26-POTHOLE-DETECTION/issues" target="_blank" rel="noopener">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span data-year></span> RoadGuard AI · FYP-26 Pothole Detection</span>
+      <span class="status-pill"><span class="status-dot" data-status-dot></span> <span data-status-text>Checking API status…</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/heatmap.js"></script>
+</body>
+</html>
