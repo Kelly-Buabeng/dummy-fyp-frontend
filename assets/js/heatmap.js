@@ -12,7 +12,7 @@
   const GHANA_CENTER = [7.9465, -1.0232];
 
   const map = L.map("map", { scrollWheelZoom: true }).setView(GHANA_CENTER, 7);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
     maxZoom: 19,
   }).addTo(map);
@@ -58,9 +58,10 @@
       points.forEach((p) => {
         L.circleMarker([p.lat, p.lng], {
           radius: 3,
-          color: "#fff",
+          color: "#1d1d1f",
+          fillColor: "#2997ff",
           weight: 1,
-          fillOpacity: 0.6,
+          fillOpacity: 0.7,
         })
           .bindPopup(`Intensity ${(p.intensity * 100).toFixed(0)}%<br>${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}`)
           .addTo(markerLayer);

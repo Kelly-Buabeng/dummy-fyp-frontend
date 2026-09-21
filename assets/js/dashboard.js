@@ -71,8 +71,8 @@
     }
 
     const top = regions.slice(0, 8);
-    const chartTextColor = "#b9b6cc";
-    const gridColor = "rgba(255,255,255,0.08)";
+    const chartTextColor = "#6e6e73";
+    const gridColor = "rgba(0,0,0,0.08)";
 
     const regionCtx = document.getElementById("region-chart");
     if (regionCtx) {
@@ -83,7 +83,7 @@
           datasets: [
             {
               data: top.length ? top.map((r) => r.total) : [0],
-              backgroundColor: "#a844de",
+              backgroundColor: "#bf5af2",
               borderRadius: 6,
               maxBarThickness: 40,
             },
@@ -121,7 +121,7 @@
           datasets: [
             {
               data: hasData ? [totals.high, totals.medium, totals.low] : [1, 0, 0],
-              backgroundColor: ["#ff5f6d", "#ffb648", "#35d68a"],
+              backgroundColor: ["#ff3b30", "#ff9f0a", "#34c759"],
               borderWidth: 0,
             },
           ],
@@ -151,8 +151,9 @@
 
     const btn = document.getElementById(format === "csv" ? "export-csv" : "export-geojson");
     const originalText = btn.textContent;
+    const spinnerClass = format === "csv" ? "spinner spinner-light" : "spinner";
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Preparing…';
+    btn.innerHTML = `<span class="${spinnerClass}"></span> Preparing…`;
 
     try {
       const blob = await RoadGuardApi.exportDetections({

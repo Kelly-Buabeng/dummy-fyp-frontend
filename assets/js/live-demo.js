@@ -97,7 +97,7 @@
   function setLoading(isLoading) {
     submitBtn.disabled = isLoading;
     submitBtn.innerHTML = isLoading
-      ? '<span class="spinner"></span> Running detection…'
+      ? '<span class="spinner spinner-light"></span> Running detection…'
       : "Run detection";
   }
 
@@ -116,7 +116,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       detections.forEach((d) => {
         const isPothole = d.label.toLowerCase() === "pothole";
-        ctx.strokeStyle = isPothole ? "#ff5f6d" : "#ffb648";
+        ctx.strokeStyle = isPothole ? "#ff3b30" : "#ff9f0a";
         ctx.lineWidth = 3;
         const x = d.bbox.x1 * scaleX;
         const y = d.bbox.y1 * scaleY;
@@ -126,9 +126,9 @@
         const label = `${d.label} ${(d.confidence * 100).toFixed(0)}%`;
         ctx.font = "600 12px -apple-system, sans-serif";
         const textW = ctx.measureText(label).width + 10;
-        ctx.fillStyle = isPothole ? "#ff5f6d" : "#ffb648";
+        ctx.fillStyle = isPothole ? "#ff3b30" : "#ff9f0a";
         ctx.fillRect(x, Math.max(0, y - 18), textW, 18);
-        ctx.fillStyle = "#0b0b14";
+        ctx.fillStyle = "#1d1d1f";
         ctx.fillText(label, x + 5, Math.max(12, y - 5));
       });
     };
