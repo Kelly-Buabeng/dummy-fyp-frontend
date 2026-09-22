@@ -1,7 +1,13 @@
 [build]
-  publish = "."
+  command = "npm run build"
+  publish = "dist"
 
+# SPA fallback: unmatched routes fall through to index.html so React
+# Router's client-side routing (including the /* 404 route) can handle
+# them. No `force = true` — Netlify only applies this when no real file
+# matches, so /assets/* and other built files are still served directly
+# rather than being swallowed into the fallback.
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/index.html"
+  status = 200
