@@ -108,7 +108,7 @@ export default function Heatmap() {
               <span>Low intensity</span>
               <span
                 className="h-2.5 w-15 rounded-full"
-                style={{ background: "linear-gradient(90deg, #2997ff, #34c759, #ff9f0a, #ff3b30)" }}
+                style={{ background: "linear-gradient(90deg, #2563eb, #34c759, #ff9f0a, #ff3b30)" }}
               />
               <span>High intensity</span>
             </div>

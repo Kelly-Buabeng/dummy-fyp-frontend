@@ -15,7 +15,7 @@ export function RegionChart({ regions }: { regions: RegionReport[] }) {
         datasets: [
           {
             data: top.length ? top.map((r) => r.total) : [0],
-            backgroundColor: "#bf5af2",
+            backgroundColor: "#2563eb",
             borderRadius: 6,
             maxBarThickness: 40,
           },

@@ -55,7 +55,7 @@ export function HeatmapView({ points }: { points: HeatmapPoint[] }) {
           center={[p.lat, p.lng]}
           radius={3}
           color="#1d1d1f"
-          fillColor="#2997ff"
+          fillColor="#2563eb"
           weight={1}
           fillOpacity={0.7}
         >

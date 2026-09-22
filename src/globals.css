@@ -3,10 +3,13 @@
 
 /*
  * RoadGuard AI theme tokens, mapped onto shadcn/ui's semantic slots.
- * Modeled on apple.com/apple-intelligence: white canvas, near-black
- * text, solid black pill buttons, flat light-gray surfaces, and the
- * blue -> purple -> pink Apple Intelligence gradient used only as an
- * accent glow / gradient-clipped headline text (never a button fill).
+ * White canvas, near-black text, solid black pill buttons, flat
+ * light-gray surfaces. Accent is a deep-navy -> vivid-blue -> teal
+ * gradient (used only for a soft glow and gradient-clipped headline
+ * text, never a button fill) — blue reads as trustworthy/professional
+ * in UX research and is the dominant accent color across enterprise
+ * and civic-tech products, which fits a road-authority tool better
+ * than a purple/pink accent.
  */
 
 @theme inline {
@@ -83,11 +86,11 @@
 
   --border: rgb(0 0 0 / 9%);
   --input: rgb(0 0 0 / 9%);
-  --ring: #bf5af2;
+  --ring: #2563eb;
 
-  --grad-1: #2997ff;
-  --grad-2: #bf5af2;
-  --grad-3: #ff6482;
+  --grad-1: #1e3a8a;
+  --grad-2: #2563eb;
+  --grad-3: #06b6d4;
 
   /* used by .section-dark (the alternating full-black feature sections) */
   --bg-dark: #000000;
