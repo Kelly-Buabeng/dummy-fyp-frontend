@@ -6,8 +6,11 @@ import { Slot } from "radix-ui"
 // Customized from the upstream shadcn/ui button: every corner radius below
 // is rounded-full instead of rounded-md, for RoadGuard AI's Apple
 // Intelligence-style pill buttons (solid black primary, flat secondary).
+// Also: transition-all -> named properties (transition: all is expensive
+// and untargeted), plus active:scale press feedback — every pressable
+// element should feel instantly responsive to a tap (emil-design-eng).
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-sm font-medium whitespace-nowrap outline-none transition-[transform,box-shadow,background-color,color,border-color] duration-150 ease-[var(--ease-out)] active:scale-[0.97] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { GlowField } from "@/components/GlowField";
+import { Reveal } from "@/components/Reveal";
 import { HeatmapView } from "@/components/HeatmapView";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 import { useApiQuery } from "@/hooks/useApiQuery";
@@ -38,22 +39,28 @@ export default function Heatmap() {
       <section className="relative overflow-hidden px-5 pt-16 pb-5 sm:px-8 sm:pt-24">
         <GlowField />
         <div className="relative z-10 mx-auto max-w-[1180px]">
-          <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
-            <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
-            Public data · GET /api/v1/heatmap
-          </span>
-          <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
-            Every confirmed pothole, <span className="gradient-text">on the map.</span>
-          </h1>
-          <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
-            Weighted by detection confidence and refreshed on demand — this is the same feed a road
-            authority dashboard would consume.
-          </p>
+          <Reveal trigger="mount" index={0}>
+            <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
+              <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
+              Public data · GET /api/v1/heatmap
+            </span>
+          </Reveal>
+          <Reveal trigger="mount" index={1}>
+            <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
+              Every confirmed pothole, <span className="gradient-text">on the map.</span>
+            </h1>
+          </Reveal>
+          <Reveal trigger="mount" index={2}>
+            <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
+              Weighted by detection confidence and refreshed on demand — this is the same feed a road
+              authority dashboard would consume.
+            </p>
+          </Reveal>
         </div>
       </section>
 
       <section className="px-5 pt-2.5 pb-14 sm:px-8 sm:pb-24">
-        <div className="mx-auto max-w-[1180px] rounded-xl border border-border bg-card p-6 sm:p-7">
+        <Reveal trigger="mount" index={3} className="mx-auto max-w-[1180px] rounded-xl border border-border bg-card p-6 sm:p-7">
           <div className="mb-4.5 flex flex-wrap items-center gap-3.5">
             <div className="min-w-[200px] flex-1">
               <label className="mb-2 block text-[13.5px] font-semibold text-muted-foreground">
@@ -114,7 +121,7 @@ export default function Heatmap() {
             </div>
             <span className="text-[13px] text-muted-foreground">{pointCount}</span>
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

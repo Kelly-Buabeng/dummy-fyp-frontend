@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { GlowField } from "@/components/GlowField";
+import { Reveal } from "@/components/Reveal";
 import { StatTile } from "@/components/StatTile";
 import { SeverityBar } from "@/components/SeverityBar";
 import { RegionChart } from "@/components/RegionChart";
@@ -122,17 +123,23 @@ export default function Dashboard() {
       <section className="relative overflow-hidden px-5 pt-16 pb-5 sm:px-8 sm:pt-24">
         <GlowField />
         <div className="relative z-10 mx-auto max-w-[1180px]">
-          <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
-            <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
-            GET /api/v1/stats · /api/v1/report
-          </span>
-          <h1 className="max-w-[24ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
-            The state of the road network, <span className="gradient-text">at a glance.</span>
-          </h1>
-          <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
-            Summary statistics and region-level severity breakdowns, ready to hand to Ghana's Highway
-            Authority.
-          </p>
+          <Reveal trigger="mount" index={0}>
+            <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
+              <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
+              GET /api/v1/stats · /api/v1/report
+            </span>
+          </Reveal>
+          <Reveal trigger="mount" index={1}>
+            <h1 className="max-w-[24ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
+              The state of the road network, <span className="gradient-text">at a glance.</span>
+            </h1>
+          </Reveal>
+          <Reveal trigger="mount" index={2}>
+            <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
+              Summary statistics and region-level severity breakdowns, ready to hand to Ghana's Highway
+              Authority.
+            </p>
+          </Reveal>
         </div>
       </section>
 
@@ -144,53 +151,61 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              <StatTile loading={statsQuery.loading} value={statsQuery.data?.total_detections.toLocaleString()} label="Total detections" />
-              <StatTile
-                loading={statsQuery.loading}
-                value={statsQuery.data ? `${Math.round(statsQuery.data.avg_confidence * 100)}%` : ""}
-                label="Avg. confidence"
-              />
-              <StatTile loading={statsQuery.loading} value={statsQuery.data?.devices_active} label="Active devices" />
-              <StatTile
-                loading={statsQuery.loading}
-                value={
-                  statsQuery.data && (
-                    <span className="inline-flex items-center gap-1.5">
-                      {statsQuery.data.mock_mode ? "Mock" : "Live"}
-                      <span
-                        className={cn(
-                          "rounded-full border px-2 py-0.5 text-[11px] font-semibold",
-                          statsQuery.data.mock_mode
-                            ? "border-warning/30 bg-warning/10 text-[#a15c00]"
-                            : "border-success/30 bg-success/10 text-[#1f8a3b]"
-                        )}
-                      >
-                        {statsQuery.data.mock_mode ? "seeded" : "real"}
+              <Reveal index={0}>
+                <StatTile loading={statsQuery.loading} value={statsQuery.data?.total_detections.toLocaleString()} label="Total detections" />
+              </Reveal>
+              <Reveal index={1}>
+                <StatTile
+                  loading={statsQuery.loading}
+                  value={statsQuery.data ? `${Math.round(statsQuery.data.avg_confidence * 100)}%` : ""}
+                  label="Avg. confidence"
+                />
+              </Reveal>
+              <Reveal index={2}>
+                <StatTile loading={statsQuery.loading} value={statsQuery.data?.devices_active} label="Active devices" />
+              </Reveal>
+              <Reveal index={3}>
+                <StatTile
+                  loading={statsQuery.loading}
+                  value={
+                    statsQuery.data && (
+                      <span className="inline-flex items-center gap-1.5">
+                        {statsQuery.data.mock_mode ? "Mock" : "Live"}
+                        <span
+                          className={cn(
+                            "rounded-full border px-2 py-0.5 text-[11px] font-semibold",
+                            statsQuery.data.mock_mode
+                              ? "border-warning/30 bg-warning/10 text-[#a15c00]"
+                              : "border-success/30 bg-success/10 text-[#1f8a3b]"
+                          )}
+                        >
+                          {statsQuery.data.mock_mode ? "seeded" : "real"}
+                        </span>
                       </span>
-                    </span>
-                  )
-                }
-                label="Data mode"
-              />
+                    )
+                  }
+                  label="Data mode"
+                />
+              </Reveal>
             </div>
           )}
 
           <div className="mt-8 grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
-            <div className="rounded-xl border border-border bg-card p-6 sm:p-7">
+            <Reveal index={0} className="rounded-xl border border-border bg-card p-6 sm:p-7">
               <h3 className="text-[19px] font-semibold">Detections by region</h3>
               <p className="mt-2 text-[15px] text-muted-foreground">Top regions by total confirmed detections.</p>
               <div className="relative mt-4 h-70">{regions.length > 0 && <RegionChart regions={regions} />}</div>
-            </div>
-            <div className="rounded-xl border border-border bg-card p-6 sm:p-7">
+            </Reveal>
+            <Reveal index={1} className="rounded-xl border border-border bg-card p-6 sm:p-7">
               <h3 className="text-[19px] font-semibold">Severity breakdown</h3>
               <p className="mt-2 text-[15px] text-muted-foreground">
                 High ≥ 75% confidence, medium ≥ 50%, low below that.
               </p>
               <div className="relative mt-4 h-70">{regions.length > 0 && <SeverityChart regions={regions} />}</div>
-            </div>
+            </Reveal>
           </div>
 
-          <div className="mt-8 rounded-xl border border-border bg-card p-6 sm:p-7">
+          <Reveal index={2} className="mt-8 rounded-xl border border-border bg-card p-6 sm:p-7">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-[19px] font-semibold">Region report</h3>
               {reportQuery.data && (
@@ -243,7 +258,7 @@ export default function Dashboard() {
                 </Table>
               </div>
             )}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -263,7 +278,7 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <div className="rounded-xl border border-white/16 bg-white/8 p-6 sm:p-7">
+            <Reveal index={0} className="rounded-xl border border-white/16 bg-white/8 p-6 sm:p-7">
               <h3 className="text-[19px] font-semibold">Export detections</h3>
               <p className="mt-2 text-[15px] text-white/60">
                 Download all saved detections as CSV for spreadsheets, or GeoJSON to drag straight into
@@ -333,9 +348,9 @@ export default function Dashboard() {
                   {exportingFormat === "geojson" ? "Preparing…" : "Download GeoJSON"}
                 </Button>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xl border border-white/16 bg-white/8 p-6 sm:p-7">
+            <Reveal index={1} className="rounded-xl border border-white/16 bg-white/8 p-6 sm:p-7">
               <h3 className="text-[19px] font-semibold">Remove a false positive</h3>
               <p className="mt-2 text-[15px] text-white/60">
                 Delete a single detection by ID — useful when the model flags something that isn't actually a
@@ -387,7 +402,7 @@ export default function Dashboard() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

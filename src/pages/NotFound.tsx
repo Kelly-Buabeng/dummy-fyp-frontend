@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GlowField } from "@/components/GlowField";
+import { Reveal } from "@/components/Reveal";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 
 export default function NotFound() {
@@ -12,7 +13,7 @@ export default function NotFound() {
   return (
     <div className="relative flex min-h-[calc(100vh-64px)] items-center justify-center overflow-hidden px-5 py-16 text-center sm:px-8">
       <GlowField />
-      <div className="relative z-10 mx-auto max-w-[1180px]">
+      <Reveal trigger="mount" className="relative z-10 mx-auto max-w-[1180px]">
         <span className="gradient-text text-[clamp(72px,16vw,160px)] leading-none font-extrabold tracking-tight">
           404
         </span>
@@ -28,7 +29,7 @@ export default function NotFound() {
             <Link to="/live-demo">Try live detection</Link>
           </Button>
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }

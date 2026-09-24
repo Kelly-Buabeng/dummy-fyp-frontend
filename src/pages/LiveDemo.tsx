@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GlowField } from "@/components/GlowField";
+import { Reveal } from "@/components/Reveal";
 import { BoundingBoxCanvas } from "@/components/BoundingBoxCanvas";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 import { useApiKey } from "@/hooks/useApiKey";
@@ -132,22 +133,32 @@ export default function LiveDemo() {
       <section className="relative overflow-hidden px-5 pt-16 pb-5 sm:px-8 sm:pt-24">
         <GlowField />
         <div className="relative z-10 mx-auto max-w-[1180px]">
-          <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
-            <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
-            Runs the real /api/v1/detect endpoint
-          </span>
-          <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
-            Try <span className="gradient-text">live detection</span> on your own photo.
-          </h1>
-          <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
-            Upload a road image, set coordinates within Ghana, and RoadGuard AI's YOLOv8 model will score it
-            in real time — the same call an ESP32-CAM unit makes in the field.
-          </p>
+          <Reveal trigger="mount" index={0}>
+            <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
+              <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
+              Runs the real /api/v1/detect endpoint
+            </span>
+          </Reveal>
+          <Reveal trigger="mount" index={1}>
+            <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
+              Try <span className="gradient-text">live detection</span> on your own photo.
+            </h1>
+          </Reveal>
+          <Reveal trigger="mount" index={2}>
+            <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
+              Upload a road image, set coordinates within Ghana, and RoadGuard AI's YOLOv8 model will score it
+              in real time — the same call an ESP32-CAM unit makes in the field.
+            </p>
+          </Reveal>
         </div>
       </section>
 
       <section className="px-5 pt-2.5 pb-14 sm:px-8 sm:pb-24">
-        <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-start gap-5 lg:grid-cols-2">
+        <Reveal
+          trigger="mount"
+          index={3}
+          className="mx-auto grid max-w-[1180px] grid-cols-1 items-start gap-5 lg:grid-cols-2"
+        >
           <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-6 sm:p-7">
             <h3 className="mb-4.5 text-[19px] font-semibold">Run a detection</h3>
 
@@ -304,7 +315,11 @@ export default function LiveDemo() {
                 confirmed.
               </p>
             ) : (
-              <div>
+              // Keyed by timestamp so each new detection replays the entrance —
+              // this is the app's one rare, high-emotion moment (a completed
+              // scan), and it was teleporting straight from placeholder text
+              // to the full result with no transition at all.
+              <Reveal trigger="mount" key={result.timestamp}>
                 <div className="mb-3.5 flex flex-wrap items-center justify-between gap-2">
                   <span
                     className={cn(
@@ -367,10 +382,10 @@ export default function LiveDemo() {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </Reveal>
             )}
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

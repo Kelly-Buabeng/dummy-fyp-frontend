@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { GlowField } from "@/components/GlowField";
+import { Reveal } from "@/components/Reveal";
 import { useDocumentHead } from "@/hooks/useDocumentHead";
 
 const ARCHITECTURE_STEPS = [
@@ -70,17 +71,23 @@ export default function About() {
       <section className="relative overflow-hidden px-5 pt-16 pb-5 sm:px-8 sm:pt-24">
         <GlowField />
         <div className="relative z-10 mx-auto max-w-[1180px]">
-          <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
-            <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
-            Final-year project · FYP-26
-          </span>
-          <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
-            Built to make <span className="gradient-text">road damage visible.</span>
-          </h1>
-          <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
-            RoadGuard AI pairs low-cost field hardware with a fine-tuned vision model so pothole reporting
-            doesn't depend on someone filing a complaint.
-          </p>
+          <Reveal trigger="mount" index={0}>
+            <span className="mb-5.5 inline-flex items-center gap-2 rounded-full border border-border bg-foreground/4 px-3.5 py-1.5 text-[13px] text-muted-foreground">
+              <span className="size-[7px] rounded-full bg-success shadow-[0_0_0_3px_rgba(52,199,89,0.2)]" />
+              Final-year project · FYP-26
+            </span>
+          </Reveal>
+          <Reveal trigger="mount" index={1}>
+            <h1 className="max-w-[22ch] text-[clamp(32px,5vw,58px)] leading-[1.05] font-bold tracking-tight">
+              Built to make <span className="gradient-text">road damage visible.</span>
+            </h1>
+          </Reveal>
+          <Reveal trigger="mount" index={2}>
+            <p className="mt-5.5 max-w-[46ch] text-[clamp(16px,2vw,21px)] text-muted-foreground">
+              RoadGuard AI pairs low-cost field hardware with a fine-tuned vision model so pothole reporting
+              doesn't depend on someone filing a complaint.
+            </p>
+          </Reveal>
         </div>
       </section>
 
@@ -124,12 +131,12 @@ export default function About() {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {ARCHITECTURE_STEPS.map((step) => (
-              <div key={step.num}>
+            {ARCHITECTURE_STEPS.map((step, i) => (
+              <Reveal key={step.num} index={i}>
                 <span className="gradient-text mb-2.5 block text-sm font-bold">{step.num}</span>
                 <h4 className="mb-1.5 text-[17px] font-semibold">{step.title}</h4>
                 <p className="text-[14.5px] text-white/60">{step.body}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -146,18 +153,20 @@ export default function About() {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {STACK.map((item) => (
-              <Card key={item.title} className="gap-2 p-6 sm:p-7">
-                <h3 className="text-[19px] font-semibold">{item.title}</h3>
-                <p className="text-[15px] text-muted-foreground">{item.body}</p>
-              </Card>
+            {STACK.map((item, i) => (
+              <Reveal key={item.title} index={i % 3}>
+                <Card className="gap-2 p-6 sm:p-7">
+                  <h3 className="text-[19px] font-semibold">{item.title}</h3>
+                  <p className="text-[15px] text-muted-foreground">{item.body}</p>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       <section className="bg-secondary px-5 py-14 text-center sm:px-8 sm:py-24">
-        <div className="mx-auto max-w-[1180px]">
+        <Reveal className="mx-auto max-w-[1180px]">
           <h2 className="text-[clamp(26px,3.8vw,40px)] font-bold tracking-tight">Want to see it running?</h2>
           <p className="mx-auto mt-4 max-w-[46ch] text-[16px] text-muted-foreground">
             Every page on this site talks to the live backend — try a detection yourself or open the map.
@@ -172,7 +181,7 @@ export default function About() {
               </a>
             </Button>
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );
